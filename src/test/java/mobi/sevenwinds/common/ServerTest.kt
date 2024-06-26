@@ -7,9 +7,12 @@ import io.ktor.server.netty.*
 import io.ktor.util.*
 import io.restassured.RestAssured
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import mobi.sevenwinds.infra.PostgresContainerExtension
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.extension.ExtendWith
 import java.util.concurrent.TimeUnit
 
+@ExtendWith(PostgresContainerExtension::class)
 open class ServerTest {
     companion object {
         private var serverStarted = false

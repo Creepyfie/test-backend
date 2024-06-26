@@ -8,7 +8,7 @@ val logback_version: String by project
 plugins {
     application
     kotlin("jvm") version "1.4.32"
-    id("com.github.johnrengelman.shadow") version "5.0.0"
+    id("com.github.johnrengelman.shadow") version "6.0.0"
 }
 
 group = "mobi.sevenwinds"
@@ -47,11 +47,11 @@ dependencies {
 
     implementation("at.favre.lib:bcrypt:0.9.0")
 
-    implementation("org.postgresql:postgresql:42.2.12")
+    implementation("org.postgresql:postgresql:42.7.3")
 
     implementation("org.jetbrains.exposed:exposed:0.17.13")
-    implementation("com.zaxxer:HikariCP:2.7.8")
-    implementation("org.flywaydb:flyway-core:5.2.4")
+    implementation("com.zaxxer:HikariCP:5.1.0")
+    implementation("org.flywaydb:flyway-core:8.5.13")
 
     implementation("com.squareup.retrofit2:retrofit:2.3.0")
     implementation("com.squareup.retrofit2:converter-jackson:2.3.0")
@@ -64,6 +64,7 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.19.0")
     testImplementation("io.rest-assured:rest-assured:4.3.3")
     testImplementation("org.hamcrest:hamcrest:2.2")
+    testImplementation("org.testcontainers:postgresql:1.19.7")
 }
 
 tasks.withType<Jar> {
