@@ -18,7 +18,7 @@ public class PostgresContainerExtension implements Extension, BeforeAllCallback,
                     .withDatabaseName("dev_mem")
                     .withPassword("dev")
                     .withUsername("dev");
-            container.setPortBindings(List.of("45533:5432", "5432:5432"));
+            container.setPortBindings(List.of("45533:5432"));
             container.start();
         }
     }

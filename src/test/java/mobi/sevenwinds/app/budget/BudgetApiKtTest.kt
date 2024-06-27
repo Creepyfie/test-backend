@@ -28,7 +28,7 @@ class BudgetApiKtTest : ServerTest() {
 
         RestAssured.given()
             .queryParam("limit", 3)
-            .queryParam("offset", 1)
+            .queryParam("offset", 0)
             .get("/budget/year/2020/stats")
             .toResponse<BudgetYearStatsResponse>().let { response ->
                 println("${response.total} / ${response.items} / ${response.totalByType}")
