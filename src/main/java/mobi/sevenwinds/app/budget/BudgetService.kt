@@ -1,13 +1,11 @@
 package mobi.sevenwinds.app.budget
 
+import io.ktor.auth.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mobi.sevenwinds.app.author.AuthorTable
-import org.jetbrains.exposed.sql.JoinType
-import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.andWhere
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object BudgetService {
@@ -26,14 +24,17 @@ object BudgetService {
 
     suspend fun getYearStats(param: BudgetYearParam): BudgetYearStatsResponse = withContext(Dispatchers.IO) {
         transaction {
-            val query = BudgetTable
-                    //для
-                .join(AuthorTable, JoinType.LEFT,null,null){BudgetTable.author_id eq AuthorTable.id}
-                .select { BudgetTable.year eq param.year}
-                    //добавлен фильтр по ФИО
-                .andWhere { AuthorTable.full_name regexp (".*(?i)"+param.filter+"(?-i).*") }
-                    //Не понял зачем вообще этот where
-           //     .andWhere { BudgetTable.author_id.isNotNull()}
+            val querySelect = BudgetTable
+                .join(AuthorTable, JoinType.LEFT, null, null) { BudgetTable.author_id eq AuthorTable.id }
+                .select { BudgetTable.year eq param.year }
+
+            if (param.searchQuery != null) {
+                    var lowerSearchQuery = param.searchQuery.toLowerCase()
+                //добавлен фильтр по ФИО
+                querySelect.andWhere { AuthorTable.full_name.lowerCase().like(lowerSearchQuery)}
+            }
+            //добавляем сортировку по месяцу и кол-ву
+            val query = querySelect
                 .orderBy(Pair(BudgetTable.month,SortOrder.ASC),Pair(BudgetTable.amount, SortOrder.DESC))
             // total относится ко всем записям из запроса, поэтому перенесли его выше выборки limit
             val total = query.count()

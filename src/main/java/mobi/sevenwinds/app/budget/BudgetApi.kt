@@ -32,6 +32,16 @@ data class  BudgetRecord(
     @Min(1) val amount: Int,
     val type: BudgetType,
     val authorId: Int?,
+ //   val authorName: String?,
+ //   val authorCreated: DateTime?
+)
+
+data class BudgetDto(
+    val year: Int,
+    val month: Int,
+    val amount: Int,
+    val type: BudgetType,
+    val authorId: Int?,
     val authorName: String?,
     val authorCreated: DateTime?
 )
@@ -40,8 +50,7 @@ data class BudgetYearParam(
     @PathParam("Год") val year: Int,
     @QueryParam("Лимит пагинации") val limit: Int,
     @QueryParam("Смещение пагинации") val offset: Int,
-//    @QueryParam("Идентификатор автора") val authorId: Int?
-    @QueryParam("Фильтр по ФИО автора") val filter: String
+    @QueryParam("Фильтр по ФИО автора", allowEmptyValues = true) val searchQuery: String?
 )
 
 class BudgetYearStatsResponse(

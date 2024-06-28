@@ -23,10 +23,10 @@ class BudgetEntity(id: EntityID<Int>) : IntEntity(id) {
     var type by BudgetTable.type
     var authorId by BudgetTable.author_id
     //эти столбцы по€вл€ютс€ после LEFT JOIN
-    var authorName by AuthorTable.full_name
-    var authorCreated by AuthorTable.created
+ //   var authorName by AuthorTable.full_name
+ //   var authorCreated by AuthorTable.created
 
     fun toResponse(): BudgetRecord {
-        return BudgetRecord(year, month, amount, type, authorId, authorName, authorCreated)
+        return BudgetRecord(year, month, amount, type, authorId)
     }
 }
