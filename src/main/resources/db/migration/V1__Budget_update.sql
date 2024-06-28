@@ -1,0 +1,2 @@
+
+update budget set type = "Расход" WHERE type = "Комиссия"
