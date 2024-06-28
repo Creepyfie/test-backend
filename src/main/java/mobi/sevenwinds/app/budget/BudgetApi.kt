@@ -26,7 +26,7 @@ fun NormalOpenAPIRoute.budget() {
     }
 }
 
-data class BudgetRecord(
+data class  BudgetRecord(
     @Min(1900) val year: Int,
     @Min(1) @Max(12) val month: Int,
     @Min(1) val amount: Int,
@@ -41,7 +41,7 @@ data class BudgetYearParam(
     @QueryParam("Лимит пагинации") val limit: Int,
     @QueryParam("Смещение пагинации") val offset: Int,
 //    @QueryParam("Идентификатор автора") val authorId: Int?
-    @QueryParam("Фильтр по ФИО автора") val filter: String?
+    @QueryParam("Фильтр по ФИО автора") val filter: String
 )
 
 class BudgetYearStatsResponse(
