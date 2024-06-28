@@ -1,5 +1,6 @@
 package mobi.sevenwinds.app.budget
 
+import mobi.sevenwinds.app.author.AuthorTable
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -21,8 +22,11 @@ class BudgetEntity(id: EntityID<Int>) : IntEntity(id) {
     var amount by BudgetTable.amount
     var type by BudgetTable.type
     var authorId by BudgetTable.author_id
+    //эти столбцы по€вл€ютс€ после LEFT JOIN
+    var authorName by AuthorTable.full_name
+    var authorCreated by AuthorTable.created
 
     fun toResponse(): BudgetRecord {
-        return BudgetRecord(year, month, amount, type, authorId)
+        return BudgetRecord(year, month, amount, type, authorId, authorName, authorCreated)
     }
 }

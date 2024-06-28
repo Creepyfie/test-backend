@@ -18,8 +18,8 @@ object BudgetService {
                 this.month = body.month
                 this.amount = body.amount
                 this.type = body.type
+                this.authorId = body.authorId!!
             }
-
             return@transaction entity.toResponse()
         }
     }
@@ -29,8 +29,11 @@ object BudgetService {
             val query = BudgetTable
                     //для
                 .join(AuthorTable, JoinType.LEFT,AuthorTable.id.eq(BudgetTable.id))
-                .select { BudgetTable.year eq param.year }
-                .andWhere { BudgetTable.author_id.isNotNull()}
+                .select { BudgetTable.year eq param.year}
+                    //добавлен фильтр по ФИО
+                .andWhere { AuthorTable.full_name regexp  (".*(?i)"+param.filter.toString()+"(?-i).*") }
+                    //Не понял зачем вообще этот where
+           //     .andWhere { BudgetTable.author_id.isNotNull()}
                 .orderBy(Pair(BudgetTable.month,SortOrder.ASC),Pair(BudgetTable.amount, SortOrder.DESC))
             // total относится ко всем записям из запроса, поэтому перенесли его выше выборки limit
             val total = query.count()
