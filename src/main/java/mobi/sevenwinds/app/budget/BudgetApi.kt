@@ -32,8 +32,6 @@ data class  BudgetRecord(
     @Min(1) val amount: Int,
     val type: BudgetType,
     val authorId: Int?,
- //   val authorName: String?,
- //   val authorCreated: DateTime?
 )
 
 data class BudgetDto(
@@ -41,7 +39,6 @@ data class BudgetDto(
     val month: Int,
     val amount: Int,
     val type: BudgetType,
-    val authorId: Int?,
     val authorName: String?,
     val authorCreated: DateTime?
 )
@@ -56,7 +53,7 @@ data class BudgetYearParam(
 class BudgetYearStatsResponse(
     val total: Int,
     val totalByType: Map<String, Int>,
-    val items: List<BudgetRecord>,
+    val items: List<BudgetDto>,
 )
 
 enum class BudgetType {

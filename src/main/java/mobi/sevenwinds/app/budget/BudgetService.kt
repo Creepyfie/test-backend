@@ -4,8 +4,15 @@ import io.ktor.auth.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mobi.sevenwinds.app.author.AuthorTable
+import mobi.sevenwinds.app.author.AuthorTable.created
+import mobi.sevenwinds.app.author.AuthorTable.full_name
+import mobi.sevenwinds.app.budget.BudgetTable
+import mobi.sevenwinds.app.budget.BudgetTable.amount
+import mobi.sevenwinds.app.budget.BudgetTable.author_id
+import mobi.sevenwinds.app.budget.BudgetTable.month
+import mobi.sevenwinds.app.budget.BudgetTable.type
+import mobi.sevenwinds.app.budget.BudgetTable.year
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object BudgetService {
@@ -36,14 +43,27 @@ object BudgetService {
             //добавляем сортировку по месяцу и кол-ву
             val query = querySelect
                 .orderBy(Pair(BudgetTable.month,SortOrder.ASC),Pair(BudgetTable.amount, SortOrder.DESC))
+
             // total относится ко всем записям из запроса, поэтому перенесли его выше выборки limit
             val total = query.count()
             //аналогично, для подсчется totalByType необходи весь результат запроса
-            val data = BudgetEntity.wrapRows(query).map { it.toResponse() }
+            val data = query.map{v -> BudgetDto(
+                year = v[year],
+                month = v[month],
+                amount = v[amount],
+                type = v[type],
+                authorName =  v[full_name],
+                authorCreated = v[created])}
             val sumByType = data.groupBy { it.type.name }.mapValues { it.value.sumOf { v -> v.amount } }
             //отсеиваем параметрами пагинации нужное кол-во строк
             query.limit(param.limit, param.offset)
-            val dataLimited = BudgetEntity.wrapRows(query).map { it.toResponse() }
+            val dataLimited = query.map{v -> BudgetDto(
+                year = v[year],
+                month = v[month],
+                amount = v[amount],
+                type = v[type],
+                authorName =  v[full_name],
+                authorCreated = v[created])}
 
             return@transaction BudgetYearStatsResponse(
                 total = total,
